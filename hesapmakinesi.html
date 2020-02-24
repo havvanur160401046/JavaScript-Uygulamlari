@@ -1,0 +1,148 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Hesap Makinesi</title>
+    <style>
+        .sayfa {
+            width: 360px;
+            margin: auto;
+        }
+        table {
+            background: #efefef;
+            border-spacing: 10px;
+        }
+
+        table .btn {
+            width: 60px;
+            background: gray;
+            text-align: center;
+            line-height: 60px;
+            color: #fff;
+            font-size: 1.5em;
+        }
+        .islem,
+        .gosterge {
+
+            padding: 5px;
+            text-align: right;
+        }
+        #gosterge {
+            height: 60px;
+            background: #ddfafa;
+            color: #333;
+            font-size: 1.8em;
+            text-align: right;
+            line-height: 40px;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        #islem {
+            background: gray;
+        }
+    </style>
+</head>
+<body>
+    <div class="sayfa">
+        <h1>Hesap Makinesi</h1>
+        <table>
+            <tr>
+                <td colspan="5" id="islem">  </td>
+            </tr>
+            <tr>
+                <td colspan="5" id="gosterge">0</td>
+            </tr>
+            <tr>
+                <td class="btn btnRakam">7</td>
+                <td class="btn btnRakam">8</td>
+                <td class="btn btnRakam">9</td>
+                <td class="btn btnOpt">/</td>
+                <td class="btn btnCE">CE</td>
+
+            </tr>
+            <tr>
+                <td class="btn btnRakam">4</td>
+                <td class="btn btnRakam">5</td>
+                <td class="btn btnRakam">6</td>
+                <td class="btn btnOpt">*</td>
+                <td class="btn btnC">C</td>
+
+            </tr>
+            <tr>
+                <td class="btn btnRakam">1</td>
+                <td class="btn btnRakam">2</td>
+                <td class="btn btnRakam">3</td>
+                <td class="btn btnOpt">-</td>
+                <td rowspan="2" class="btn btnOpt">=</td>
+            </tr>
+            <tr>
+                <td colspan="2" class="btn btnRakam">0</td>
+
+                <td class="btn">.</td>
+                <td class="btn btnOpt">+</td>
+            </tr>
+
+        </table>
+
+    </div>
+    <script>
+        //kontrol için genel değişkenleri oluşturuyorz
+        var optDurum = false, opt = "", sonuc = 0;
+
+
+        //rakamların kontrolunuu olusturuyorz
+        //class adlarını baz alarak rakamaları alıyorum dizi şeklinde
+        var btnRakam = document.querySelectorAll(".btnRakam"); //rakamlar 
+        var gosterge = document.querySelector("#gosterge")//gosterge
+        var btnOpt = document.querySelectorAll(".btnOpt");//Operatorleri aldık
+        var islem = document.querySelector("#islem")//işlem
+        var btnC = document.querySelector(".btnC")
+        var btnCE = document.querySelector(".btnCE")
+
+        //butonlara basıldı kontrolu foreach ile tum nesnelere olay atayalım
+        btnRakam.forEach(function (element) {
+            element.onclick = function (e) {
+                //bastaki 0 degeri kaldırmak için ve operotore basılma durumunu kontrol edelim
+                if (gosterge.textContent == "0" || optDurum)
+                    gosterge.textContent = "";
+
+                //text nesnesini okuyup td içindeki degerler ile birlestirdik
+                gosterge.textContent += this.textContent;
+                optDurum = false;
+            }
+
+        })
+
+        btnOpt.forEach(function (element) {
+            element.onclick = function (e) {
+                optDurum = true//artık operatöre basıldı
+                var yeniOpt = this.textContent;
+
+                islem.textContent = islem.textContent + " " + gosterge.textContent + " " + yeniOpt;
+
+                //sonucu hesaplayalım
+                switch (opt) {
+                    case "+": gosterge.textContent = (sonuc + Number(gosterge.textContent)); break;
+                    case "-": gosterge.textContent = (sonuc - Number(gosterge.textContent)); break;
+                    case "/": gosterge.textContent = (sonuc / Number(gosterge.textContent)); break;
+                    case "*": gosterge.textContent = (sonuc * Number(gosterge.textContent)); break;
+                    default: break;
+                }
+                sonuc = Number(gosterge.textContent);
+                opt = yeniOpt;
+
+            }
+        })
+        btnC.onclick = function (e) {
+            gosterge.textContent = "";
+        }
+        btnCE.onclick = function (e) {
+            gosterge.textContent = "";
+            islem.textContent = "";
+            sonuc = 0;
+            opt = "";
+        }
+    </script>
+</body>
+
+</html>
